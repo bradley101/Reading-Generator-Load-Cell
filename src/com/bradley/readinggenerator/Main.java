@@ -9,8 +9,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -38,6 +39,11 @@ import javax.swing.JComboBox;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import java.awt.Color;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
 
 /*
  * @author bradley
@@ -51,9 +57,8 @@ public class Main extends JFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	private final JSeparator separator = new JSeparator();
-	private JTextField textField_2;
-	private JTextField textField_3;
 	private JTable table;
+	private JComboBox<String> comboBox;
 
 	/**
 	 * Launch the application.
@@ -77,9 +82,8 @@ public class Main extends JFrame {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Main() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 441);
+		setBounds(100, 100, 700, 486);
 		setTitle("Readings Generator - shantanu.banerjee.vt@gmail.com");
-		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
@@ -107,56 +111,50 @@ public class Main extends JFrame {
 		lblNewLabel_2.setBounds(241, 70, 94, 14);
 		contentPane.add(lblNewLabel_2);
 
-		JComboBox<String> comboBox = new JComboBox<String>();
+		comboBox = new JComboBox<String>();
 		comboBox.setBounds(345, 67, 116, 20);
-		comboBox.addItem("5");
-		comboBox.addItem("10");
-		comboBox.addItem("1.7");
-		comboBox.addItem("3.5");
-		comboBox.addItem("50");
-		comboBox.addItem("200");
+		comboBox.addItem("300");
+		comboBox.addItem("500");
+		comboBox.addItem("750");
 		comboBox.addItem("1000");
-		comboBox.addItem("5 to 35");
-		comboBox.addItem("1");
-		comboBox.addItem("35");
+		comboBox.addItem("1500");
+		comboBox.addItem("2000");
+		comboBox.addItem("2500");
+		comboBox.addItem("3000");
+		
+		comboBox.addItem("30");
+		comboBox.addItem("50");
+		comboBox.addItem("75");
+		comboBox.addItem("100");
+		comboBox.addItem("150");
+		comboBox.addItem("200");
+		comboBox.addItem("250");
+		comboBox.addItem("500");
+		
 		contentPane.add(comboBox);
 		separator.setBounds(0, 95, 684, 8);
 		contentPane.add(separator);
 
-		JLabel lblZeroReading = new JLabel("Zero Reading");
-		lblZeroReading.setBounds(106, 114, 79, 20);
-		contentPane.add(lblZeroReading);
-
-		textField_2 = new JTextField();
-		textField_2.setBounds(189, 114, 86, 20);
-		contentPane.add(textField_2);
-		textField_2.setColumns(10);
-
-		JLabel lblSecondReading = new JLabel("Second Reading");
-		lblSecondReading.setBounds(367, 117, 94, 17);
-		contentPane.add(lblSecondReading);
-
-		textField_3 = new JTextField();
-		textField_3.setBounds(473, 114, 86, 20);
-		contentPane.add(textField_3);
-		textField_3.setColumns(10);
-
 		table = new JTable(new DefaultTableModel());
-		table.setBounds(106, 163, 453, 177);
+		table.setBounds(37, 225, 587, 164);
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.addColumn("load");
-		model.addColumn("up");
-		model.addColumn("down");
+		model.addColumn("red");
+		model.addColumn("green");
+		model.addColumn("blue");
+		model.addColumn("average");
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-		model.addRow(new Object[] { "Pressure", "Up Reading", "Down Reading" });
+		table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+		model.addRow(new Object[] { "Load", "Red Reading", "Blue Reading", "Green Reading", "Average" });
 		contentPane.add(table);
 
 		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(293, 368, 89, 23);
+		btnSave.setBounds(290, 413, 89, 23);
 		contentPane.add(btnSave);
 
 		comboBox.addActionListener(new ActionListener() {
@@ -168,9 +166,6 @@ public class Main extends JFrame {
 				makeChangesToTable(selection);
 			}
 		});
-
-		textField_2.setText("0");
-		textField_3.setText("0");
 				
 		JLabel lblCustomer = new JLabel("Customer");
 		lblCustomer.setBounds(10, 11, 59, 14);
@@ -225,50 +220,102 @@ public class Main extends JFrame {
 		
 		JComboBox comboBox_1 = new JComboBox();
 		comboBox_1.setBounds(566, 67, 58, 20);
-		comboBox_1.addItem("MPa");
-		comboBox_1.addItem("Ksc");
-		comboBox_1.addItem("KPa");
-		comboBox_1.addItem("psi");
-		comboBox_1.addItem("Bar");
-		comboBox_1.addItem("mm");
-		comboBox_1.addItem("Ton");
+		comboBox_1.addItem("kN");
+		comboBox_1.addItem("Tonne");
+		
 		contentPane.add(comboBox_1);
 		
 		JLabel lblSelectUnit = new JLabel("Select Unit");
 		lblSelectUnit.setBounds(481, 70, 75, 14);
 		contentPane.add(lblSelectUnit);
-
-		textField_2.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				insertIntoTableCol1(textField_2.getText(), textField_3.getText(), comboBox.getSelectedIndex());
-			}
-		});
-		textField_3.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				insertIntoTableCol1(textField_2.getText(), textField_3.getText(), comboBox.getSelectedIndex());
-			}
-		});
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Red", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel.setBounds(37, 114, 180, 96);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		textField_9 = new JTextField();
+		textField_9.setBounds(84, 21, 86, 20);
+		panel.add(textField_9);
+		textField_9.setColumns(10);
+		
+		JLabel label = new JLabel("Zero Reading");
+		label.setBounds(10, 21, 72, 20);
+		panel.add(label);
+		
+		JLabel lblSecdReading = new JLabel("Secd Reading");
+		lblSecdReading.setBounds(10, 52, 72, 20);
+		panel.add(lblSecdReading);
+		
+		textField_10 = new JTextField();
+		textField_10.setColumns(10);
+		textField_10.setBounds(84, 52, 86, 20);
+		panel.add(textField_10);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setLayout(null);
+		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Green", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_1.setBounds(241, 114, 180, 96);
+		contentPane.add(panel_1);
+		
+		textField_11 = new JTextField();
+		textField_11.setColumns(10);
+		textField_11.setBounds(84, 21, 86, 20);
+		panel_1.add(textField_11);
+		
+		JLabel label_1 = new JLabel("Zero Reading");
+		label_1.setBounds(10, 21, 72, 20);
+		panel_1.add(label_1);
+		
+		JLabel label_2 = new JLabel("Secd Reading");
+		label_2.setBounds(10, 52, 72, 20);
+		panel_1.add(label_2);
+		
+		textField_12 = new JTextField();
+		textField_12.setColumns(10);
+		textField_12.setBounds(84, 52, 86, 20);
+		panel_1.add(textField_12);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setLayout(null);
+		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "White", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_2.setBounds(444, 114, 180, 96);
+		contentPane.add(panel_2);
+		
+		textField_13 = new JTextField();
+		textField_13.setColumns(10);
+		textField_13.setBounds(84, 21, 86, 20);
+		panel_2.add(textField_13);
+		
+		JLabel label_3 = new JLabel("Zero Reading");
+		label_3.setBounds(10, 21, 72, 20);
+		panel_2.add(label_3);
+		
+		JLabel label_4 = new JLabel("Secd Reading");
+		label_4.setBounds(10, 52, 72, 20);
+		panel_2.add(label_4);
+		
+		textField_14 = new JTextField();
+		textField_14.setColumns(10);
+		textField_14.setBounds(84, 52, 86, 20);
+		panel_2.add(textField_14);
+		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textField_4, textField_5, textField_6, textField_7, textField_8, textField, textField_1, comboBox, comboBox_1, textField_9, textField_10, textField_11, textField_12, textField_13, textField_14, btnSave, lblNewLabel, lblNewLabel_1, lblNewLabel_2, separator, table, lblCustomer, lblPoRef, lblInstrument, lblRange, lblDate, lblSelectUnit, panel, label, lblSecdReading, panel_1, label_1, label_2, panel_2, label_3, label_4}));
 
 		btnSave.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if (textField.getText() == null || textField.getText().equals("") || textField_1.getText() == null
+				if (textField_6.getText() == null || textField_6.getText().equals("") || textField.getText() == null || textField.getText().equals("") || textField_1.getText() == null
 						|| textField_1.getText().equals("")) {
-					JOptionPane.showMessageDialog(null, "Invalid Project Name or Serial Number",
+					JOptionPane.showMessageDialog(null, "Invalid Project Name, Serial Number or Instrument Name",
 							"Readings Generator - shantanu.banerjee.vt@gmail.com", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 
 				File dir = new File(DESKTOP_DIR + textField.getText());
-				File cDir = new File(dir, ((String) comboBox.getSelectedItem()) + (String) comboBox_1.getSelectedItem());
+				File cDir = new File(dir, textField_6.getText() + ((String) comboBox.getSelectedItem()) + (String) comboBox_1.getSelectedItem());
 				cDir.mkdirs();
 				File dFile = new File(cDir, textField_1.getText() + ".pdf");
 				destFile = dFile.getAbsolutePath();
@@ -302,44 +349,83 @@ public class Main extends JFrame {
 				});
 			}
 		};
-		textField_1.addFocusListener(fa);
-		textField_2.addFocusListener(fa);
-		textField_3.addFocusListener(fa);
+		textField_9.addFocusListener(fa);
+		textField_10.addFocusListener(fa);
+		textField_11.addFocusListener(fa);
+		textField_12.addFocusListener(fa);
+		textField_13.addFocusListener(fa);
+		textField_14.addFocusListener(fa);
+		
+		ActionListener textFieldActionListner = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String[] red = {
+					textField_9.getText(),
+					textField_10.getText()
+				};
+				String[] blue = {
+					textField_11.getText(),
+					textField_12.getText()
+				};
+				String[] green= {
+					textField_13.getText(),
+					textField_14.getText()
+				};
+				insertIntoTableCol1(new String[][] {red,  blue, green});
+			}
+		};
+		
+		textField_9.addActionListener(textFieldActionListner);
+		textField_10.addActionListener(textFieldActionListner);
+		textField_11.addActionListener(textFieldActionListner);
+		textField_12.addActionListener(textFieldActionListner);
+		textField_13.addActionListener(textFieldActionListner);
+		textField_14.addActionListener(textFieldActionListner);
+		
 		makeChangesToTable(0);
 	}
 
 	String unit;
 	
-	protected void insertIntoTableCol1(String a, String b, int idx) {
+	protected void insertIntoTableCol1(String[][] data) {
 		// TODO Auto-generated method stub
-		if (a.equals("") || b.equals(""))
-			return;
-		float f = Float.parseFloat(a);
-		float s = Float.parseFloat(b);
-		float diff;
-		if (idx == 2) {
-			diff = (f - s) / 17f;
-			s = s - diff;
-		} else if (idx == 7) {
-			diff = (f - s) / 5f;
-			s = f - (diff * 35);
+		for (int i = 0; i < data.length; ++i) {
+			if (data[i][0].equals("") || data[i][1].equals(""))
+				return;
 		}
-
 		
-		diff = -(f - s) / num;
-
+		float[] red = {
+				Float.parseFloat(data[0][0]),
+				Float.parseFloat(data[0][1])
+		};
+		float[] blue = {
+				Float.parseFloat(data[1][0]),
+				Float.parseFloat(data[1][1])
+		};
+		float[] green = {
+				Float.parseFloat(data[2][0]),
+				Float.parseFloat(data[2][1])
+		};
+		
+		Reading redReading = new Reading(red[0], red[1], num);
+		Reading blueReading = new Reading(blue[0], blue[1], num);
+		Reading greenReading = new Reading(green[0], green[1], num);
+		
+		List<Reading> readings = Arrays.asList(new Reading[] {redReading, blueReading, greenReading});
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
-
-		model.setValueAt(String.format("%.0f", f), 1, 1);
-		model.setValueAt(String.format("%.0f", f + ThreadLocalRandom.current().nextInt(-4, 5)), 1, 2);
-		f = f + diff;
-		for (int i = 1; i <= num; i = i + 1) {
-			model.setValueAt(String.format("%.0f", f), i + 1, 1);
-			if (i < num)
-				model.setValueAt(String.format("%.0f", f + ThreadLocalRandom.current().nextInt(-4, 5)), i + 1, 2);
-			else
-				model.setValueAt(String.format("%.0f", f), i + 1, 2);
-			f = f + diff;
+		
+		for (int i = 0; i < readings.size(); ++i) {
+			float[] r = readings.get(i).getReadings();
+			for (int j = 0; j < r.length; ++j) {
+				model.setValueAt(String.format("%.0f", r[j]), j + 1, i + 1);
+			}
+		}
+		
+		float[] avgs = Reading.getAverage(readings);
+		for (int i = 0; i < avgs.length; ++i) {
+			model.setValueAt(String.format("%.0f", avgs[i]), i + 1, 4);
 		}
 
 	}
@@ -358,48 +444,10 @@ public class Main extends JFrame {
 		// TODO Auto-generated method stub
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-		if (selection == 0) {
-			maxLoad = 5;
-			difference = 1;
-			num = 5;
-		} else if (selection == 1) {
-			maxLoad = 10;
-			difference = 2;
-			num = 5;
-		} else if (selection == 2) {
-			maxLoad = 1.8f;
-			difference = 0.3f;
-			num = 6;
-		} else if (selection == 3) {
-			maxLoad = 3.5f;
-			difference = 0.7f;
-			num = 5;
-		} else if (selection == 4) {
-			maxLoad = 50;
-			difference = 10;
-			num = 5;
-		} else if (selection == 5) {
-			maxLoad = 200;
-			difference = 40;
-			num = 5;
-		} else if (selection == 6) {
-			maxLoad = 1000;
-			difference = 200;
-			num = 5;
-		} else if (selection == 7) {
-			maxLoad = 3.5f;
-			difference = 0.7f;
-			num = 5;
-		} else if (selection == 8) {
-			maxLoad = 1.0f;
-			difference = 0.2f;
-			num = 5;
-		} else if (selection == 9) {
-			maxLoad = 35.0f;
-			difference = 7.0f;
-			num = 5;
-		}
-
+		maxLoad = Float.valueOf(comboBox.getSelectedItem().toString());
+		difference = maxLoad / 5;
+		num = 5;
+		
 		model.setRowCount(num + 2);
 
 		for (int i = 1; i < model.getRowCount(); i++) {
@@ -417,6 +465,12 @@ public class Main extends JFrame {
 	double[][] data;
 	double x[], y[], abc[], gf, lpress[], ppress[], lpresserr[], ppresserr[];
 	String customer, poref, instrument, range, date, sno;
+	private JTextField textField_9;
+	private JTextField textField_10;
+	private JTextField textField_11;
+	private JTextField textField_12;
+	private JTextField textField_13;
+	private JTextField textField_14;
 	
 	@SuppressWarnings({ "unchecked" })
 	void saveToTemplate() {
@@ -442,7 +496,7 @@ public class Main extends JFrame {
 		x = new double[data.length];
 		for (int i = 0 ; i < data.length ; i++) {
 			y[i] = data[i][0];
-			x[i] = (data[i][1] + data[i][2]) / 2.0d;
+			x[i] = data[i][data[0].length - 1];
 		}
 		
 		gf = y[y.length - 1] / (x[0] - x[x.length - 1]);
@@ -538,15 +592,13 @@ public class Main extends JFrame {
 			}
 			
 			String[] t2L = {
-					"Pressure",
+					"Force",
 					"O/P DIGIT (f²/1000)",
 					"End Point",
-//					"Polyfit",
 					"End Point",
-//					"Polyfit"
 			};
 			
-			PdfPTable t2 = new PdfPTable(new float[] {1, 3, 1, 1});
+			PdfPTable t2 = new PdfPTable(new float[] {1, 4, 1, 1});
 			t2.setWidthPercentage(100);
 			p = new PdfPCell();
 			
@@ -558,15 +610,14 @@ public class Main extends JFrame {
 			
 			String[] t3L = {
 					unit,
-					"UP",
-					"DOWN",
-					"AVG",
+					"Gauge 1",
+					"Gauge 2",
+					"Gauge 3",
+					"Avg",
 					"Acc. " + unit,
-//					"Acc. " + unit,
 					"NL.%F.S.",
-//					"Err%F.S."
 			};
-			PdfPTable t3 = new PdfPTable(new float[] {1, 1, 1, 1, 1, 1});
+			PdfPTable t3 = new PdfPTable(new float[] {1, 1, 1, 1, 1, 1, 1});
 			t3.setWidthPercentage(100);
 			p = new PdfPCell();
 			
@@ -585,6 +636,8 @@ public class Main extends JFrame {
 				p.setPhrase(new Phrase(String.format("%.0f", data[i][1])));
 				t3.addCell(p);
 				p.setPhrase(new Phrase(String.format("%.0f", data[i][2])));
+				t3.addCell(p);
+				p.setPhrase(new Phrase(String.format("%.0f", data[i][3])));
 				t3.addCell(p);
 				p.setPhrase(new Phrase(String.format("%.0f", x[i])));
 				p.setGrayFill(0.8f);
@@ -660,18 +713,18 @@ public class Main extends JFrame {
 			
 			String[] t4L = {
 					"",
-					"To Calculate Crack \"C\" use the following equation",
-					"Linear C(mm) = G(R0 - R1)",
+					"To Calculate Load \"L\" use the following equation",
+					"Load L = G(R0 - R1)",
 					"R1= Current reading in digit during observation.",
 					"",
-					"Digit=Freq²/1000 also called LU (Linear Unit).",
-					"R0=Reading at zero pressure in LU.",
-					"R1= Current reading in LU during observation.",
-					"T0 = Temp at the time of taking zero reading.",
-					"T1 = Temp during observation.",
+					"Note: The user is advised to establish the zero reading at known temp. at site",
 					"",
-					"Red\t=\tSENSOR+\tGreen\t=\tThermistor",
-					"Black\t=\tSENSOR-\tWhite\t=\tThermistor\tBare\t=\tSHIELD"
+					"Wire\tCOLOR CODE",
+					"BLACK\tCOMMON",
+					"RED\tGAUGE 1",
+					"GREEN\tGAUGE 2",
+					"WHITE\tGAUGE 3",
+					"Current reading during observation"
 			};
 			
 			for (int i = 0 ; i < t4L.length ; i++) {
@@ -683,9 +736,21 @@ public class Main extends JFrame {
 					p.setPhrase(new Phrase(t4L[i]));
 				}
 				
-				p.setGrayFill(i == 4 ? 0.8f : 1f);
+				p.setGrayFill(i == 5 ? 0.8f : 1f);
 				t6.addCell(p);
 			}
+			
+			PdfPTable t7 = new PdfPTable(3);
+			t7.setWidthPercentage(100);
+			p = new PdfPCell(new Phrase("GAUGE 1:\t\t" + data[0][1]));
+			p.setBorder(Rectangle.LEFT | Rectangle.BOTTOM | Rectangle.RIGHT);
+			t7.addCell(p);
+			p = new PdfPCell(new Phrase("GAUGE 2:\t\t" + data[0][2]));
+			p.setBorder(Rectangle.BOTTOM | Rectangle.RIGHT);
+			t7.addCell(p);
+			p = new PdfPCell(new Phrase("GAUGE 3:\t\t" + data[0][3]));
+			p.setBorder(Rectangle.BOTTOM | Rectangle.RIGHT);
+			t7.addCell(p);
 			
 			doc.add(t1);
 			doc.add(t2);
@@ -693,6 +758,7 @@ public class Main extends JFrame {
 			doc.add(t4);
 //			doc.add(t5);
 			doc.add(t6);
+			doc.add(t7);
 			doc.close();
 			
 			
