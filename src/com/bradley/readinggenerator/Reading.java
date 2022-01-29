@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Reading {
 	private float zeroReading, endReading;
 	private int divisions;
+	private float[] readings;
 	
 	public Reading(float a, float b, int divisions) {
 		this.zeroReading = a;
@@ -15,15 +16,18 @@ public class Reading {
 	}
 	
 	public float[] getReadings() {
-		float[] r = new float[divisions + 1];
-		
-		r[0] = zeroReading;
-		float diff = (endReading - zeroReading) / divisions;
-		for (int i = 1; i <= divisions; ++i) {
-			r[i] = r[i - 1] + diff + ThreadLocalRandom.current().nextInt(-4, 5);
+		if (readings == null) {
+			readings = new float[divisions + 1];
+			
+			readings[0] = zeroReading;
+			float diff = (endReading - zeroReading) / divisions;
+			for (int i = 1; i <= divisions; ++i) {
+				readings[i] = readings[i - 1] + diff + ThreadLocalRandom.current().nextInt(-4, 3);
+			}
 		}
 		
-		return r;
+		
+		return readings;
 	}
 	
 	public static float[] getAverage(List<Reading> list) {

@@ -475,7 +475,7 @@ public class Main extends JFrame {
 	@SuppressWarnings({ "unchecked" })
 	void saveToTemplate() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		Vector<Vector<Object>> v = model.getDataVector();
+		Vector<Vector> v = model.getDataVector();
 		customer = textField_4.getText();
 		poref = textField_5.getText();
 		instrument = textField_6.getText();
@@ -536,7 +536,7 @@ public class Main extends JFrame {
 					{"Instrument", instrument},
 					{"Date", date},
 					{"Range", range},
-					{"R.Temp", "23° C"},
+					{"R.Temp", "23ï¿½ C"},
 					{"Mfg. Sl. No", sno},
 					{"Atm. Press", "1004 mb"}
 			};
@@ -593,7 +593,7 @@ public class Main extends JFrame {
 			
 			String[] t2L = {
 					"Force",
-					"O/P DIGIT (f²/1000)",
+					"O/P DIGIT (fï¿½/1000)",
 					"End Point",
 					"End Point",
 			};
@@ -639,7 +639,7 @@ public class Main extends JFrame {
 				t3.addCell(p);
 				p.setPhrase(new Phrase(String.format("%.0f", data[i][3])));
 				t3.addCell(p);
-				p.setPhrase(new Phrase(String.format("%.0f", x[i])));
+				p.setPhrase(new Phrase(String.format("%.0f", Math.floor(x[i]))));
 				p.setGrayFill(0.8f);
 				t3.addCell(p);
 				p.setGrayFill(1.0f);
@@ -688,7 +688,7 @@ public class Main extends JFrame {
 			p = new PdfPCell(new Phrase("THERMAL "));
 			p.setBorder(Rectangle.LEFT|Rectangle.TOP|Rectangle.BOTTOM);
 			t4.addCell(p);
-			p = new PdfPCell(new Phrase("(K) = " + String.valueOf(format.format(0.000126)) + " " + unit + "° C"));
+			p = new PdfPCell(new Phrase("(K) = " + String.valueOf(format.format(0.000126)) + " " + unit + "ï¿½ C"));
 			p.setBorder(Rectangle.TOP|Rectangle.RIGHT|Rectangle.BOTTOM);
 			t4.addCell(p);
 			
