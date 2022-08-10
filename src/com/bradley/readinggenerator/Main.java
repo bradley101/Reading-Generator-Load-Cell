@@ -141,7 +141,7 @@ public class Main extends JFrame {
 		model.addColumn("load");
 		model.addColumn("red");
 		model.addColumn("green");
-		model.addColumn("blue");
+		model.addColumn("white");
 		model.addColumn("average");
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -150,7 +150,7 @@ public class Main extends JFrame {
 		table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 		table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
-		model.addRow(new Object[] { "Load", "Red Reading", "Blue Reading", "Green Reading", "Average" });
+		model.addRow(new Object[] { "Load", "Red Reading", "Green Reading", "White Reading", "Average" });
 		contentPane.add(table);
 
 		JButton btnSave = new JButton("Save");
