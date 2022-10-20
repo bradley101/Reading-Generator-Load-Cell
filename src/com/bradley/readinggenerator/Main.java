@@ -1,10 +1,7 @@
 package com.bradley.readinggenerator;
 
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -13,8 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -30,20 +26,9 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.JComboBox;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import java.awt.Color;
 import javax.swing.border.TitledBorder;
-import javax.swing.UIManager;
+
 import org.eclipse.wb.swing.FocusTraversalOnArray;
-import java.awt.Component;
 
 /*
  * @author bradley
@@ -101,6 +86,10 @@ public class Main extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("Serial Number");
 		lblNewLabel_1.setBounds(10, 70, 94, 14);
 		contentPane.add(lblNewLabel_1);
+
+		JCheckBox autoIncCheckbox = new JCheckBox("Auto Increment S.no");
+		autoIncCheckbox.setBounds(10, 90, 200, 14);
+		contentPane.add(autoIncCheckbox);
 
 		textField_1 = new JTextField();
 		textField_1.setBounds(101, 67, 116, 20);
@@ -302,8 +291,9 @@ public class Main extends JFrame {
 		panel_2.add(textField_14);
 		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textField_4, textField_5, textField_6, textField_7, textField_8, textField, textField_1, comboBox, comboBox_1, textField_9, textField_10, textField_11, textField_12, textField_13, textField_14, btnSave, lblNewLabel, lblNewLabel_1, lblNewLabel_2, separator, table, lblCustomer, lblPoRef, lblInstrument, lblRange, lblDate, lblSelectUnit, panel, label, lblSecdReading, panel_1, label_1, label_2, panel_2, label_3, label_4}));
 
-		btnSave.addActionListener(new ActionListener() {
+		KeyStroke saveShortcut = KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK);
 
+		AbstractAction action = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -328,13 +318,22 @@ public class Main extends JFrame {
 					else
 						return;
 				}
-				
+
 				unit = (String) comboBox_1.getSelectedItem();
 				saveToTemplate();
 				JOptionPane.showMessageDialog(null, "Saved successfully!",
 						"Readings Generator - shantanu.banerjee.vt@gmail.com", JOptionPane.INFORMATION_MESSAGE);
+
+				if (autoIncCheckbox.isSelected()) {
+					textField_1.setText(String.valueOf(Long.parseLong(textField_1.getText()) + 1));
+					textField_9.requestFocus();
+				}
 			}
-		});
+		};
+		btnSave.addActionListener(action);
+		btnSave.getActionMap().put("save", action);
+		btnSave.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(saveShortcut, "save");
 
 		FocusAdapter fa = new FocusAdapter() {
 			
