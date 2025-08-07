@@ -120,6 +120,7 @@ public class Main extends JFrame {
 		comboBox.addItem("250");
 		comboBox.addItem("500");
 		comboBox.addItem("25");
+        comboBox.addItem("40");
 		
 		contentPane.add(comboBox);
 		separator.setBounds(0, 95, 684, 8);
